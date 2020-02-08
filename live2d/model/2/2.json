@@ -32,6 +32,13 @@
 				"file": "mtn/aoba_live2D_01.mtn",
 				"msg_id": "1",
 				"sound": "voice/400170010.mp3"
+			}
+		],
+		"tap_body": [
+			{
+				"file": "mtn/aoba_live2D_01.mtn",
+				"msg_id": "1",
+				"sound": "voice/400170010.mp3"
 			},
 			{
 				"file": "mtn/aoba_live2D_02.mtn",
@@ -109,9 +116,7 @@
 			{
 				"file": "mtn/aoba_live2D_34.mtn",
 				"sound": "voice/400170340.mp3"
-			}
-		],
-		"tap_body": [
+			},
 			{
 				"file": "mtn/aoba_live2D_11.mtn",
 				"sound": "voice/400170110.mp3"
