@@ -46,34 +46,37 @@ if(getChromeVersion() >= 72){
     };
 }
 
-$(document).on('copy', function (){
-    showMessage('你都复制了些什么呀，转载要记得加上出处哦~~', 5000);
+document.addEventListener('copy', function(e){
+    showMessage('你都复制了些什么呀，转载要记得加上出处哦~~', 5000)
 });
 
 function initTips(){
-    $.ajax({
-        cache: true,
-        url: `${message_Path}message.json`,
-        dataType: "json",
-        success: function (result){
-            $.each(result.mouseover, function (index, tips){
-                $(tips.selector).mouseover(function (){
-                    var text = tips.text;
-                    if(Array.isArray(tips.text)) text = tips.text[Math.floor(Math.random() * tips.text.length + 1)-1];
-                    text = text.renderTip({text: $(this).text()});
-                    showMessage(text, 3000);
-                });
-            });
-            $.each(result.click, function (index, tips){
-                $(tips.selector).click(function (){
-                    var text = tips.text;
-                    if(Array.isArray(tips.text)) text = tips.text[Math.floor(Math.random() * tips.text.length + 1)-1];
-                    text = text.renderTip({text: $(this).text()});
-                    showMessage(text, 3000);
-                });
-            });
-        }
-    });
+    fetch(`${message_Path}message.json`)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      data.mouseover.forEach(function (item) {
+        document.querySelectorAll(item.selector).forEach(function(el){
+          el.onmouseover = function () {
+            var text = item.text;
+            if(Array.isArray(item.text)) text = item.text[Math.floor(Math.random() * item.text.length + 1)-1];
+            text = text.renderTip({text: this.innerText});
+            showMessage(text, 3000);
+          }
+        })
+      });
+      data.click.forEach(function (item) {
+        document.querySelectorAll(item.selector).forEach(function(el){
+          el.onclick = function () {
+            var text = item.text;
+            if(Array.isArray(item.text)) text = item.text[Math.floor(Math.random() * item.text.length + 1)-1];
+            text = text.renderTip({text: this.innerText});
+            showMessage(text, 3000);
+          }
+        })
+      });
+    })
 }
 initTips();
 
@@ -123,34 +126,45 @@ initTips();
 window.setInterval(showHitokoto,30000);
 
 function showHitokoto(){
-    $.getJSON('https://v1.hitokoto.cn/',function(result){
-        showMessage(result.hitokoto, 5000);
+  fetch('https://v1.hitokoto.cn/');
+    .then(function(response) {
+      return response.json();
+    });
+    .then(function(data) {
+      showMessage(data.hitokoto, 5000);
     });
 }
 
-function showMessage(text, timeout){
+function showMessage (text, timeout) {
     if(Array.isArray(text)) text = text[Math.floor(Math.random() * text.length + 1)-1];
-    //console.log('showMessage', text);
-    $('.message').stop();
-    $('.message').html(text).fadeTo(200, 1);
-    if (timeout === null) timeout = 5000;
-    hideMessage(timeout);
+    var message = document.querySelector('.message')
+    message.innerHTML = text
+    message.style = 'opacity:1'
+    hideMessage(timeout)
 }
 
-function hideMessage(timeout){
-    $('.message').stop().css('opacity',1);
-    if (timeout === null) timeout = 5000;
-    $('.message').delay(timeout).fadeTo(200, 0);
+var t1 =null
+function hideMessage (timeout) {
+    clearTimeout(t1)
+    t1 = setTimeout(function () {
+        document.querySelector('.message').style = 'opacity:0';
+    },timeout)
 }
 
-function initLive2d (){
-    $('.hide-button').fadeOut(0).on('click', () => {
-        $('#landlord').css('display', 'none')
-    })
-    $('#landlord').hover(() => {
-        $('.hide-button').fadeIn(600)
-    }, () => {
-        $('.hide-button').fadeOut(600)
-    })
+function initLive2d () {
+    var hide_btn = document.querySelector('.hide-button')
+    var landlord = document.getElementById('landlord')
+    try {
+        hide_btn.onclick = function () {
+            landlord.style = 'display:none'
+            hide_btn.style = 'display:none'
+        }
+        landlord.onmouseover = function () {
+            hide_btn.style = 'display:block'
+        }
+        landlord.onmouseout = function () {
+            hide_btn.style = 'display:none'
+        }
+    }catch (err) {}
 }
 initLive2d ();
