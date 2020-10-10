@@ -126,10 +126,10 @@ initTips();
 window.setInterval(showHitokoto,30000);
 
 function showHitokoto(){
-  fetch('https://v1.hitokoto.cn/');
+  fetch('https://v1.hitokoto.cn/')
     .then(function(response) {
       return response.json();
-    });
+    })
     .then(function(data) {
       showMessage(data.hitokoto, 5000);
     });
@@ -137,33 +137,33 @@ function showHitokoto(){
 
 function showMessage (text, timeout) {
     if(Array.isArray(text)) text = text[Math.floor(Math.random() * text.length + 1)-1];
-    var message = document.querySelector('.message')
-    message.innerHTML = text
-    message.style = 'opacity:1'
-    hideMessage(timeout)
+    var message = document.querySelector('.message');
+    message.innerHTML = text;
+    message.style = 'opacity:1';
+    hideMessage(timeout);
 }
 
 var t1 =null
 function hideMessage (timeout) {
-    clearTimeout(t1)
+    clearTimeout(t1);
     t1 = setTimeout(function () {
         document.querySelector('.message').style = 'opacity:0';
     },timeout)
 }
 
 function initLive2d () {
-    var hide_btn = document.querySelector('.hide-button')
-    var landlord = document.getElementById('landlord')
+    var hide_btn = document.querySelector('.hide-button');
+    var landlord = document.getElementById('landlord');
     try {
         hide_btn.onclick = function () {
-            landlord.style = 'display:none'
-            hide_btn.style = 'display:none'
+            landlord.style = 'display:none';
+            hide_btn.style = 'display:none';
         }
         landlord.onmouseover = function () {
-            hide_btn.style = 'display:block'
+            hide_btn.style = 'display:block';
         }
         landlord.onmouseout = function () {
-            hide_btn.style = 'display:none'
+            hide_btn.style = 'display:none';
         }
     }catch (err) {}
 }
